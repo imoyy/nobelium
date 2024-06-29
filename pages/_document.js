@@ -86,7 +86,7 @@ class MyDocument extends Document {
               </noscript>
             </>
           )}
-          <link rel='icon' href='/favicon.png' />
+          <link rel='icon' href='https://i.imgur.com/gbWamjn.png' />
           <link
             rel='alternate'
             type='application/rss+xml'
