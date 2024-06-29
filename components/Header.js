@@ -4,28 +4,33 @@ import Image from 'next/image'
 import { useConfig } from '@/lib/config'
 import { useLocale } from '@/lib/locale'
 import useTheme from '@/lib/theme'
+import HeaderMenu from './HeaderMenu'
 
 const NavBar = () => {
   const BLOG = useConfig()
   const locale = useLocale()
   const links = [
     {
+      id: 0,
       name: locale.NAV.INDEX || 'Blog',
       to: BLOG.path || '/',
       show: true,
     },
     {
+      id: 1,
       name: locale.NAV.ABOUT || 'About',
       to: '/about',
       show: BLOG.showAbout,
     },
     {
+      id: 2,
       name: locale.NAV.RSS || 'Rss',
       to: '/feed',
-      show: true,
+      show: false,
       external: true,
     },
     {
+      id: 3,
       name: locale.NAV.SEARCH || 'Search',
       to: '/search',
       show: true,
@@ -34,6 +39,7 @@ const NavBar = () => {
   return (
     <div className='flex-shrink-0'>
       <ul className='flex flex-row'>
+        {/* <HeaderMenu links={links} /> */}
         {links.map(
           link =>
             link.show && (
@@ -54,8 +60,8 @@ export default function Header({ navBarTitle, fullWidth }) {
   const { dark } = useTheme()
 
   // Favicon
-
-  const resolveFavicon = fallback => (!fallback && dark ? '/favicon.dark.png' : '/favicon.png')
+  const resolveFavicon = fallback =>
+    !fallback && dark ? 'https://i.imgur.com/gbWamjn.png' : 'https://i.imgur.com/gbWamjn.png'
   const [favicon, _setFavicon] = useState(resolveFavicon())
   const setFavicon = fallback => _setFavicon(resolveFavicon(fallback))
 
@@ -75,7 +81,12 @@ export default function Header({ navBarTitle, fullWidth }) {
       } else {
         navRef.current?.classList.add('remove-sticky')
       }
+
+      if (titleRef.current) {
+        titleRef.current.classList.toggle('md:flex', !entry.isIntersecting)
+      }
     },
+
     [useSticky],
   )
 
@@ -151,14 +162,12 @@ const HeaderName = forwardRef(function HeaderName(
   return (
     <p
       ref={ref}
-      className='header-name ml-2 font-medium text-gray-600 dark:text-gray-300 capture-pointer-events grid-rows-1 grid-cols-1 items-center'
+      className='hidden md:flex items-center justify-between w-full px-2 font-medium text-gray-600 dark:text-gray-300 capture-pointer-events'
       onClick={onClick}
     >
-      {postTitle && <span className='post-title row-start-1 col-start-1'>{postTitle}</span>}
-      <span className='row-start-1 col-start-1'>
-        <span className='site-title'>{siteTitle}</span>
-        <span className='site-description font-normal'>, {siteDescription}</span>
-      </span>
+      {postTitle && (
+        <span className='min-w-0 text-ellipsis overflow-hidden whitespace-nowrap'>{postTitle}</span>
+      )}
     </p>
   )
 })
